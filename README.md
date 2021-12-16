@@ -1,3 +1,5 @@
+U
+
 # Express Notes
 
 # Description
@@ -6,6 +8,7 @@ This is an Express project used to write and save notes
 
 ## Table of Contents
 
+- [User Story](#userstory)
 - [Installation](#installation)
 - [Usage](#usage)
 - [License](#license)
@@ -13,11 +16,18 @@ This is an Express project used to write and save notes
 - [Credits](#credits)
 - [Questions](#questions)
 
+## User Story
+
+AS A small business owner
+I WANT to be able to write and save notes
+SO THAT I can organize my thoughts and keep track of tasks I need to complet
+
 ## Installation
 
-Use npm i 
+Use npm i
 
 ## Usage
+
 ![CLI README Generator Screenshot](./images/screenshot.png)
 
 Run node index
