@@ -10,8 +10,10 @@ const port = 3001;
 // Path and filesystem variables to read, write, update database
 const path = require("path");
 const fs = require("fs");
-// Database
-const db = require("./db/db.json");
+// Database json file
+let db = require("./db/db.json");
+// My custom functions
+const { generateId } = require("./public/assets/js/util");
 
 // Middleware to serve public files
 app.use(express.static("public"));
@@ -51,15 +53,16 @@ app.post("/", function (req, res) {
   res.send("Got a POST request!");
 });
 
-// THIS WILL UPDATE DATABASE
-// saveNotes() will fetch this
+// THIS WILL UPDATE DATABASE saveNotes() will fetch this
 app.post("/api/notes", function (req, res) {
   let results = db;
+  // Must add Id to new note
   const newNote = req.body;
-
   console.log("new note: ", newNote);
-  console.log(`${req.method} request received to add a note`);
-  console.log("existing notes:", results);
+  newNote.id = generateId();
+  console.log("new id note: ", newNote);
+  // console.log(`${req.method} request received to add a note`);
+  // console.log("existing notes:", results);
 
   // Get existing notes
   res.json(results); // not necessary for front end??
@@ -68,22 +71,14 @@ app.post("/api/notes", function (req, res) {
     if (error) {
       console.error(error);
     } else {
-      // Convert to JSON object // parsed results is not defined
-      // let parsedResults = JSON.parse(data);
-      // Add a new note
-      // parsedResults.push(newNote);
-
-      // Maybe remove these string lines
-      // let stringNote = JSON.stringify(newNote);
-      // console.log("stringNote: ", stringNote);
-
+      // Original database
       let database = db;
-      // new note or string note?
+      // Add new note to database
       database.push(newNote);
 
-      console.log("database:", database);
+      // console.log("database:", database);
 
-      // Write new notes to database JSON.stringify(database, null, 4)
+      // Write new notes to database, must be a string
       fs.writeFile(
         "./db/db.json",
         JSON.stringify(database, null, 4),
@@ -94,11 +89,36 @@ app.post("/api/notes", function (req, res) {
       );
     }
   }); // End readfile
-}); /// End post
+}); /// End POST
 
-// THIS WORKS WITH INSOMNIA DO NOT DELETE
-app.delete("/", function (req, res) {
+// app.delete("/", function (req, res) {
+//   res.send("Got a DELETE request at /user");
+// });
+
+// app.delete breaks server
+app.delete("/api/notes/:id", function (req, res) {
+  let { id } = req.params;
+  console.log("line 103 id:", id);
+
+  const removedNote = db.find((element) => element.id === id);
+  console.log("line 103 removedNote:", removedNote);
+  if (!removedNote) {
+    res.send(error);
+  }
+
+  db = db.filter((note) => note.id !== id);
+
+  //write new json
+
+  fs.writeFile("./db/db.json", JSON.stringify(db, null, 4), (writeErr) =>
+    writeErr
+      ? console.error(writeErr)
+      : console.info("Successfully updated notes!")
+  );
+
+  console.log(`delete request ${db}`);
   res.send("Got a DELETE request at /user");
+  res.json(db);
 });
 
 app.listen(port, () => {
