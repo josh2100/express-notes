@@ -1,8 +1,3 @@
-// not using routes at this time
-//const apiRoutes = require("./routes/apiRoutes");
-// Router stuff that never works
-// app.use("/api", apiRoutes);
-// app.use("/", htmlRoutes);
 // Server variables
 const express = require("express");
 const app = express();
@@ -12,7 +7,7 @@ const path = require("path");
 const fs = require("fs");
 // Database json file
 let db = require("./db/db.json");
-// My custom functions
+// Utility functions
 const { generateId } = require("./public/assets/js/util");
 
 // Middleware to serve public files
@@ -22,25 +17,18 @@ app.use(express.urlencoded({ extended: true }));
 // Parse incoming JSON data
 app.use(express.json());
 
-// Returns index.html
+// Returns index.html homepage
 app.get("/", (req, res) => {
-  //Express servers send responses using the .send() method on the response object.
-  //.send() will take any input and include it in the response body.
   res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
-// Return notes.html
+// Return notes.html to display notes
 app.get("/notes", (req, res) => {
-  //Express servers send responses using the .send() method on the response object.
-  //.send() will take any input and include it in the response body.
   res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
 
-// getNotes() will fetch this
+// getNotes() will fetch notes from database with this endpoint
 app.get("/api/notes", function (req, res) {
-  // Send a message to the client
-  // res.json(`${req.method} request received to get reviews`);
-
   let results = db;
 
   console.log(`${req.method} request received to get notes`);
@@ -48,24 +36,23 @@ app.get("/api/notes", function (req, res) {
   res.json(results);
 });
 
-// THIS WORKS WITH INSOMNIA DO NOT DELETE
+// Saved this endpoint only for testing purposes
 app.post("/", function (req, res) {
   res.send("Got a POST request!");
 });
 
-// THIS WILL UPDATE DATABASE saveNotes() will fetch this
+// This will update database with new note, saveNotes() will fetch this
 app.post("/api/notes", function (req, res) {
   let results = db;
-  // Must add Id to new note
+
   const newNote = req.body;
   console.log("new note: ", newNote);
+  // Generate random ID for note
   newNote.id = generateId();
   console.log("new id note: ", newNote);
-  // console.log(`${req.method} request received to add a note`);
-  // console.log("existing notes:", results);
 
   // Get existing notes
-  res.json(results); // not necessary for front end??
+  res.json(results);
   // Read existing notes
   fs.readFile("./db/db.json", "utf-8", (error, data) => {
     if (error) {
@@ -76,9 +63,7 @@ app.post("/api/notes", function (req, res) {
       // Add new note to database
       database.push(newNote);
 
-      // console.log("database:", database);
-
-      // Write new notes to database, must be a string
+      // Write new notes to database as a strings
       fs.writeFile(
         "./db/db.json",
         JSON.stringify(database, null, 4),
@@ -88,17 +73,11 @@ app.post("/api/notes", function (req, res) {
             : console.info("Successfully updated notes!")
       );
     }
-  }); // End readfile
-}); /// End POST
+  });
+});
 
-// app.delete("/", function (req, res) {
-//   res.send("Got a DELETE request at /user");
-// });
-
-// app.delete breaks server
 app.delete("/api/notes/:id", function (req, res) {
   let { id } = req.params;
-  console.log("line 103 id:", id);
 
   const removedNote = db.find((element) => element.id === id);
   console.log("line 103 removedNote:", removedNote);
@@ -108,7 +87,7 @@ app.delete("/api/notes/:id", function (req, res) {
 
   db = db.filter((note) => note.id !== id);
 
-  //write new json
+  // Write new json
 
   fs.writeFile("./db/db.json", JSON.stringify(db, null, 4), (writeErr) =>
     writeErr
@@ -116,7 +95,6 @@ app.delete("/api/notes/:id", function (req, res) {
       : console.info("Successfully updated notes!")
   );
 
-  console.log(`delete request ${db}`);
   res.send("Got a DELETE request at /user");
   res.json(db);
 });
