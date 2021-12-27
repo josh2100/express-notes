@@ -6,7 +6,7 @@
 // Server variables
 const express = require("express");
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 // Path and filesystem variables to read, write, update database
 const path = require("path");
 const fs = require("fs");
