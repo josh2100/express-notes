@@ -1,6 +1,6 @@
 # Express Notes
 
-This is an Express project used to write and save notes.
+This is an Express.js project used to write and save notes to a server on Heroku. The front end displays a homepage and notes page with HTML. The back end utilizes Express.js and Node to write notes to a JSON file on the server.
 
 ## Table of Contents
 
@@ -20,7 +20,7 @@ SO THAT I can organize my thoughts and keep track of tasks I need to complete
 
 ## Installation
 
-Use npm i
+Clone the project, and install node modules using npm i. If you decide to deploy the application to Heroku or another site, be sure to remove package-lock.json and node_modules/ from the .gitignore.
 
 ## Usage
 

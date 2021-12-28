@@ -4,8 +4,8 @@
 #VScode
 .vscode
 
-#Node operations
-package-lock.json
+#Node operations - Remove package-lock.json if deploying server
+package-lock.json 
 
 # Logs
 logs
@@ -46,7 +46,7 @@ bower_components
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directories
+# Dependency directories - Remove node_modules if deploying server 
 node_modules/
 jspm_packages/
 
