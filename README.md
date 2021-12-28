@@ -19,7 +19,7 @@ Clone the project, and install node modules using npm i. If you decide to deploy
 
 ## Usage
 
-![Express Notes Screenshot](.public/assets/images/screenshot.png)
+![Express Notes Screenshot](./public/assets/images/screenshot.png)
 
 Notes can be added and deleted with the simple user interface.
 
